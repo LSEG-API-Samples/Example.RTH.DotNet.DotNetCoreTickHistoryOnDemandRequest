@@ -204,7 +204,7 @@ namespace Authentication
                 {
                     throw new FileNotFoundException(string.Format("Unable to find {0} ",requestModelPath));
                 }
-                FileStream fileStream = new FileStream(requestModelPath, FileMode.Open);
+                var fileStream = new FileStream(requestModelPath, FileMode.Open);
                 using (StreamReader reader = new StreamReader(fileStream))
                 {
                     extractionRequestContent = reader.ReadToEndAsync().GetAwaiter().GetResult();
