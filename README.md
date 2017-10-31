@@ -75,7 +75,11 @@ You should see output like the following example
 ```
 
 C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>dotnet restore
-  Restore completed in 114.14 ms for C:\dotnetcore\TickHistoryOnDemandRequest\Authentication\Authentication.csproj.
+  C:\dotnetcore\TickHistoryOnDemandRequest_001\Authentication>dotnet restore
+  Restoring packages for C:\dotnetcore\TickHistoryOnDemandRequest_001\Authentication\Authentication.csproj...
+  Generating MSBuild file C:\dotnetcore\TickHistoryOnDemandRequest_001\Authentication\obj\Authentication.csproj.nuget.g.props.
+  Generating MSBuild file C:\dotnetcore\TickHistoryOnDemandRequest_001\Authentication\obj\Authentication.csproj.nuget.g.targets.
+  Restore completed in 725.9 ms for C:\dotnetcore\TickHistoryOnDemandRequest_001\Authentication\Authentication.csproj.
 
 C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>dotnet run
 Token=Token_MQN_j0vDQPXySKXx4ytFLr3cdJJU5S22LVpZauUJ-ubNdpkL1LFGsl9HIuHD2gqu059x7Kcg4RSMU4MPYlUFZyo0uGvA-QeeWLCFBN8twTMwwFVBN8UUepMR3QY49vgpHqZoVg8wy9N8wWViakdUkQZTomcM4Y7CQK_2QAzUT0Ck9JplFXvBxD8ImVEZ
@@ -126,6 +130,14 @@ C:\dotnetcore\TickHistoryOnDemandRequest\RawExtraction>
 ```
 You should see output like the following example
 ```
+
+C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction>dotnet restore
+  Restoring packages for C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction\RawExtraction.csproj...
+  Generating MSBuild file C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction\obj\RawExtraction.csproj.nuget.g.props.
+  Generating MSBuild file C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction\obj\RawExtraction.csproj.nuget.g.targets.
+  Restore completed in 1.6 sec for C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction\RawExtraction.csproj.
+
+
 C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction>dotnet build
 Microsoft (R) Build Engine version 15.3.409.57025 for .NET Core
 Copyright (C) Microsoft Corporation. All rights reserved.
@@ -136,7 +148,10 @@ Build succeeded.
     0 Warning(s)
     0 Error(s)
 
-Time Elapsed 00:00:03.23
+Time Elapsed 00:00:03.58
+
+C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction>
+
 ```
 Net step run command 
 ```
