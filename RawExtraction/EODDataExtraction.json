@@ -1,0 +1,30 @@
+{
+  "ExtractionRequest": {
+    "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.ElektronTimeseriesExtractionRequest",
+    "ContentFieldNames": [
+      "Instrument ID",
+      "Open",
+      "High",
+      "Low",
+      "Last",
+      "Volume",
+      "VWAP",
+      "Number of Price Moves",
+      "Trade Date"
+    ],
+    "IdentifierList": {
+      "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
+      "InstrumentIdentifiers": [
+        {
+          "Identifier": "TRI.N",
+          "IdentifierType": "Ric"
+        }
+      ]
+    },
+    "Condition": {
+      "ReportDateRangeType": "Range",
+      "QueryStartDate": "1996-01-01",
+      "QueryEndDate": "2017-11-01"
+    }
+  }
+}
