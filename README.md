@@ -31,24 +31,24 @@ The following sample codes for Extraction request, it works very well on Windows
 
 ```cs
  var ExtractionsContext = new ExtractionsContext(new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/"), "<UserName>", "Password");
-            var availableFields = ExtractionsContext.GetValidContentFieldTypes(ReportTemplateTypes.TickHistoryTimeAndSales);
+var availableFields = ExtractionsContext.GetValidContentFieldTypes(ReportTemplateTypes.TickHistoryTimeAndSales);
 
-            //Find fields that are trade or quote related
-            var fields = availableFields
-                .Where(x => x.FieldGroup == "Quote" || x.FieldGroup == "Trade")
-                .Select(x => x.Name).ToArray();
+//Find fields that are trade or quote related
+var fields = availableFields
+            .Where(x => x.FieldGroup == "Quote" || x.FieldGroup == "Trade")
+            .Select(x => x.Name).ToArray();
 
-            //Request an extraction
-            //Reduce the poll time for the purposes of the example (to trigger async processing and exhibit a polling step).
-            ExtractionsContext.Preferences.WaitSeconds = 5;
-            ExtractionsContext.Options.AutomaticDecompression = true; //Decompress gzip to plain text
-            var startDate = new DateTimeOffset(2016, 9, 29, 0, 0, 0, TimeSpan.FromHours(-5)); //Central Time Zone
-            var endDate = startDate.AddHours(12);
-            var result = ExtractionsContext.ExtractRaw(
-                new TickHistoryTimeAndSalesExtractionRequest
+//Request an extraction
+//Reduce the poll time for the purposes of the example (to trigger async processing and exhibit a polling step).
+ExtractionsContext.Preferences.WaitSeconds = 5;
+ExtractionsContext.Options.AutomaticDecompression = true; //Decompress gzip to plain text
+var startDate = new DateTimeOffset(2016, 9, 29, 0, 0, 0, TimeSpan.FromHours(-5)); //Central Time Zone
+var endDate = startDate.AddHours(12);
+var result = ExtractionsContext.ExtractRaw(
+            new TickHistoryTimeAndSalesExtractionRequest
+            {
+                Condition = new TickHistoryTimeAndSalesCondition
                 {
-                    Condition = new TickHistoryTimeAndSalesCondition
-                    {
                         ReportDateRangeType = ReportDateRangeType.Range,
                         QueryStartDate = startDate,
                         QueryEndDate = endDate,
@@ -57,16 +57,16 @@ The following sample codes for Extraction request, it works very well on Windows
                         MessageTimeStampIn = TickHistoryTimeOptions.GmtUtc,
                         SortBy = TickHistorySort.SingleByRic,
                         DisplaySourceRIC = false
-                    },
-                    ContentFieldNames = fields,
-                    IdentifierList = new InstrumentIdentifierList
+                },
+                ContentFieldNames = fields,
+                IdentifierList = new InstrumentIdentifierList
+                {
+                    InstrumentIdentifiers = new[]
                     {
-                        InstrumentIdentifiers = new[]
-                        {
-                InstrumentIdentifier.Create(IdentifierType.Ric, "IBM.N"),
-                        }
-                    },
-                });
+                        InstrumentIdentifier.Create(IdentifierType.Ric, "IBM.N"),
+                    }
+                },
+            });
 
             //Download the results
             using (var response = ExtractionsContext.RawExtractionResultOperations.GetReadStream(result))
@@ -443,3 +443,4 @@ TRI.N,Market Price,2018-01-04T21:01:47.603737654Z,-5,Trade,44.03,26850,21:01:47.
 TRI.N,Market Price,2018-01-04T21:01:47.604267631Z,-5,Trade,44.03,,21:01:47.578000000
 
 ```
+The RAWExtraction example also provide EODDataExtraction.json which is sample request for End of Day data. You can just modify EODDataExtraction.json and then replace ExtractionRequest.json with the file.
