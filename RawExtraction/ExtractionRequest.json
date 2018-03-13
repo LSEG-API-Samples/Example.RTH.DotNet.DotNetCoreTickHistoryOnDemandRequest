@@ -1,0 +1,27 @@
+{
+  "ExtractionRequest": {
+    "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.TickHistoryTimeAndSalesExtractionRequest",
+    "ContentFieldNames": [
+      "Trade - Price",
+      "Trade - Volume",
+      "Trade - Exchange Time"
+    ],
+    "IdentifierList": {
+      "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
+      "InstrumentIdentifiers": [
+        {
+          "Identifier": "TRI.N",
+          "IdentifierType": "Ric"
+        }
+      ]
+    },
+    "Condition": {
+      "MessageTimeStampIn": "GmtUtc",
+      "ApplyCorrectionsAndCancellations": false,
+      "ReportDateRangeType": "Range",
+      "QueryStartDate": "2018-01-05T00:00:00.000Z",
+      "QueryEndDate": "2018-01-05T12:00:00.000Z",
+      "DisplaySourceRIC": true
+    }
+  }
+}
