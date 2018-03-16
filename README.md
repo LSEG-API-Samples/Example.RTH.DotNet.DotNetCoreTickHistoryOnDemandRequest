@@ -11,7 +11,7 @@ Tick History's REST API is a Representational State Transfer (REST)-compliant AP
 
 ## Limitation of REST API Toolkit
 
-This section describing about the issue when using the REST API Toolkit on macOS or Linux. At the time we write this article, we understand that the Toolkit has the following limitation.
+This section describing the issue when using the REST API Toolkit on macOS or Linux. At the time we write this article, we understand that the Toolkit has the following limitation.
 
 * It supports only Windows Platform because the Toolkit still building with .NET Framework 4.x. 
 
@@ -23,9 +23,7 @@ This section describing about the issue when using the REST API Toolkit on macOS
 ![REST API Toolkit Limitation](./DSSTRTHArchitecture_Mac.png)
 
 
-Typically you can create a new project target .NET Core 2.x on Visual Studio 2017 and then add libraries from the REST API Toolkit to the project. You should be able to build the solution or project without any error and you should be able to run it on Windows platform.
-
-The following sample codes to demonstrate Extraction request works very well on Windows with .NET Core 2.0 Project type.
+Typically you can create a new project target .NET Core 2.x on Visual Studio 2017 and then add libraries from the REST API Toolkit to the project. You should be able to build the solution or project without any error and you should be able to run it on Windows platform.The following sample codes demonstrates Extraction request and it works very well on Windows with .NET Core 2.0 Project type.
 
 ```cs
 var ExtractionsContext = new ExtractionsContext(new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/"), "<UserName>", "Password");
@@ -77,7 +75,7 @@ var result = ExtractionsContext.ExtractRaw(
             }
 ```
 
-But if you copy the same .NET Core project to macOS or Linux and rebuild it. You should see errors about unresolved reference like following errors.
+However if you copy the same .NET Core project to macOS or Linux and rebuild it. You may receive errors about unresolved reference like following errors.
 
 ```command
 user1@ubuntudev1:~/workspaces/ConsoleApp8/ConsoleApp8$ dotnet build
@@ -103,25 +101,26 @@ At the time we write this article, it looks like the version of OData Client use
 
 ![REST API Toolkit Solution](./DSSTRTHArchitecture_Mac_Solution.png)
 
-As explained earlier .NET developer can use alternative way by communicate directly over HTTPS like the other programming languages. So they can control everything including the way to send Http request and process the Http response. However the REST API user has to know what are the request messages they need to send and what are the Http Headers required by the server. We provide the [User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item) and the [REST API Reference](https://hosted.datascopeapi.reuters.com/RestApi.Help/Home/ExampleAppDownload?Id=1) where you can find more details about the API specification and the information about HTTP request and response along with the request condition and its parameters.  
+As explained earlier .NET developer may choose alternative approach by communicate directly over HTTPS like the other programming languages. So they can control everything including the way to send Http request and process the Http response. However developer has to understand what are the request messages they need to send and what are the Http Headers required by the server. There are [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item) and the [REST API Reference](https://hosted.datascopeapi.reuters.com/RestApi.Help/Home/ExampleAppDownload?Id=1) that we provide for developer so that they can find more details about the API specification and the information about HTTP request and response along with the request condition and its parameters.
 
-Currently .NET Core 2.x providing HTTPClient class which developer can use to send Http request and process the response message. There is a new version of NewtonSoft JSON.NET library which support .NET Core target platform and fully compatible with .NET Core 2.x so that .NET developer can use the JSON library to parse the JSON data. 
+.NET Core 2.x SDK providing HTTPClient class which developer can use to send Http request and process the response message.It has a new version of NewtonSoft JSON.NET library which support .NET Core target platform and fully compatible with .NET Core 2.x so that .NET developer can use the Json library to parse the Json data. 
 
-### Implementation of the example
+### Technical Requirements
 
 Based on the solution described above, this example use the following SDK and library for implementing .NET Core application.
 
-* .NET Core 2.0 SDK. You can find installation instruction including the document about .NET Core from https://www.microsoft.com/net/core/platform
+* Visual Studio 2017 or Visual Studio Code.
+* .NET Core 2.0 SDK. You can find installation instruction including the document about .NET Core from [Microsoft website](https://www.microsoft.com/net/core/platform). This example use [HttpClient](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/console-webapiclient) class to send request and get response from DSS Server.
 
-* Using [HttpClient](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/console-webapiclient) class from .NET Core SDK to send request and get response from DSS Server.
+* C# is the programming language used in example application. 
 
-* Using Json.Net to parse data from the Http response message. https://www.newtonsoft.com/json
+* Using [Json.Net](https://www.newtonsoft.com/json) to parse data from the Http response message. 
 
 You can use Visual Studio 2017 or using just Visual Studio code to open the example codes. We will provide .NET Core sample usage in the next section.
 
-### Send and Receive Http request and response
+### How to use HttpClient
 
-The following sample codes demonstrate how to call HttpClient class to send Http request(Post/Get) and process Http response message using JSon.NET.
+The following sample codes demonstrate how to use HttpClient class to send Http request(Post/Get) and process Http response message using Json.NET.
 
 **Send Http Post**
 
@@ -161,7 +160,31 @@ var resp = await client.SendAsync(extractionStatusRequest);
 ...
 ```
 
-Get the data from response message using JObject.Parse from NewtonSoft Json.NET library.
+Get data from response message using JObject.Parse from NewtonSoft Json.NET library.
+The following sample codes demonstrate how to get JobID and Notes from Http response message.
+
+Sample Http response message
+```json
+HTTP/1.1 200 OK
+{
+ "@odata.context": "https://hosted.datascopeapi.reuters.com/RestApi/v1/$metadata#RawExtraction
+Results/$entity",
+ "JobId": "0x05432da4dd2e2e3f", 
+ "Notes": [ "Extraction Services Version 10.7.35662 (6a8afc92e222), Built Sep 30 2016 17:07:16\nUser
+ID: 9007660\nExtraction ID: 2000000000533706\nSchedule: 0x0570a0ea31ec3156 (ID = 0x00000000000000
+00)\nInput List (1 items): (ID = 0x0570a0ea31ec3156) Created: 10/05/2016 13:58:59 Last Modified:
+10/05/2016 13:58:59\nReport Template (10 fields): _OnD_0x0570a0ea31ec3156 (ID = 0x0570a0ea39bc31
+56) Created: 10/05/2016 13:54:46 Last Modified: 10/05/2016 13:54:46\nSchedule dispatched via mess
+age queue (0x0570a0ea31ec3156), Data source identifier (9D186D4A108140F29A916E05621B1704)\nSchedu
+le Time: 10/05/2016 13:54:46\nProcessing started at 10/05/2016 13:54:46\nProcessing completed suc
+cessfully at 10/05/2016 13:58:59\nExtraction finished at 10/05/2016 17:58:59 UTC, with servers: t
+m04n01, TRTH (245.58 secs)\nHistorical Instrument <RIC,.AD.N> expanded to 1 RIC: .AD.N.\nManifes
+t: #RIC,Domain,Start,End,Status,Count\nManifest: .AD.N,Market Price,,,Inactive,0\n"
+ ]
+}
+```
+
+C# codes
 ```cs
 //Convert response content to Json String as we know it return Content in Json format.
 responseContent = await extractionResponse.Content.ReadAsStringAsync();
@@ -172,14 +195,14 @@ var notes = JObject.Parse(statusResponseContent)["Notes"];
 foreach (var note in notes)
      Console.WriteLine(note);
 ```
-At the last step to download data from the server, the example also provides an option to allow user downloading data from Amazon S3 instead. It will add **X-Direct-Download** custom header in Http request message and set it to **True**  in order to get HTTP Redirect to a new download location on Amazon S3. Below is sample codes from the example.
+To download result from server it has an option to allow user downloading data from Amazon S3 instead. Application  has to add **X-Direct-Download** custom header in Http request message and set it to **True**  in order to get HTTP Redirect to a new download location on Amazon S3. Below is sample codes from the example.
 
 ```cs
 // Create a new request and set HttpMethod to Get and set AcceptEncoding to gzip and deflate
 // The application will receive data as gzip stream with CSV format.
 var retrieveDataRequest = new HttpRequestMessage(HttpMethod.Get, retrieveDataUri);
 retrieveDataRequest.Headers.Authorization = new AuthenticationHeaderValue(dssToken);
-    
+
 // Add custom header to HttpClient to download data from AWS server
 if(downloadFromAmzS3)
    retrieveDataRequest.Headers.Add("X-Direct-Download", "True");
@@ -208,6 +231,7 @@ if (getDataResponse.StatusCode == HttpStatusCode.Redirect)
               
 }
 ```
+
 ## Demo 
 
 There are two console applications provided in this example. 
@@ -312,11 +336,13 @@ C:\dotnetcore\TickHistoryOnDemandRequest\RawExtraction>
 3) This example read Json request content from file **ExtractionReqeust.json** so that you can modify ExtractionReqeust.json to request item and fields you want. The default value is for Time and Sales Tick Historical data.
 
 4) Run dotnet restore to restore required library and then build the example.
+
 ```
 > dotnet restore
 > dotnet build
 ```
 You should see the following console output.
+
 ```
 
 C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction>dotnet restore
@@ -444,6 +470,6 @@ TRI.N,Market Price,2018-01-04T21:01:47.603737654Z,-5,Trade,44.03,26850,21:01:47.
 TRI.N,Market Price,2018-01-04T21:01:47.604267631Z,-5,Trade,44.03,,21:01:47.578000000
 
 ```
-The RAWExtraction example also provide file EODDataExtraction.json in the same folder. It is sample request for End of Day data. You can just modify EODDataExtraction.json and then replace ExtractionRequest.json with the file.
+The RAWExtraction example also provide file EODDataExtraction.json in the same folder. It is sample request for End of Day data. You can just replace ExtractionRequest.json with information from EODDataExtraction.json.
 
 You can download examples from [GitHub](https://github.com/TR-API-Samples/Example.TRTH.DotNETCore.TickHistoryOnDemandRequest).
