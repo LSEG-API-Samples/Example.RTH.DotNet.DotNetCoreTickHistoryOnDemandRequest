@@ -3,55 +3,83 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
-using Newtonsoft.Json;  
+using System.Net.Http.Headers; 
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-namespace Authentication
+namespace Example.DotNetCore.TRTHRESTAPI
 {
     class Program
     {
         class TickHistoricalManager
         {
-            public static async Task<string> GetToken(string credentialFilePath)
+            public TickHistoricalManager()
+            {
+                _requestTimeout = 300000;
+                _waitTimeout = 30000;
+            }
+            
+            public string GetToken()
             {
 
-                var returnToken="";
-                var authenUri=new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Authentication/RequestToken");
-                var content="";
-                if(!File.Exists(credentialFilePath))
+                Console.WriteLine("Request new Token from DSS server");
+                var tokenAuthenticate = new Example.DotNetCore.TRTHRESTAPI.Security.Authentication();
+                Console.Write("Enter username:");
+                tokenAuthenticate.Credentials.Username = Console.ReadLine();
+                Console.Write("Enter password:");
+                var password = "";
+                // Read password 
+                ConsoleKeyInfo info = Console.ReadKey(true);
+                while (info.Key != ConsoleKey.Enter)
                 {
-                    throw new FileNotFoundException(string.Format("Unable to find {0} ",credentialFilePath));
+                    if (info.Key != ConsoleKey.Backspace)
+                    {
+                        password += info.KeyChar;
+                        info = Console.ReadKey(true);
+                    }
+                    else if (info.Key == ConsoleKey.Backspace)
+                    {
+                        if (!string.IsNullOrEmpty(password))
+                        {
+                            password = password.Substring
+                            (0, password.Length - 1);
+                        }
+                        info = Console.ReadKey(true);
+                    }
                 }
-                FileStream fileStream = new FileStream(credentialFilePath, FileMode.Open);
-                using (StreamReader reader = new StreamReader(fileStream))
-                {
-                    content = await reader.ReadToEndAsync();
-                }
-                using (HttpClient client = new HttpClient())
-                {
-                    var request = new HttpRequestMessage(HttpMethod.Post,authenUri);
-                    request.Headers.Add("Prefer", "respond-async");
-                    request.Content = new StringContent(content);
-                    request.Content.Headers.ContentType = new MediaTypeHeaderValue("application/json");
+                for (int i = 0; i < password.Length; i++)
+                    Console.Write("*");
+                Console.WriteLine("");
+                tokenAuthenticate.Credentials.Password = password;
+                return String.Format("Token{0}", tokenAuthenticate.GetToken().Result);
+                
+            }
+            // Time the application wait before it re-retreive status of the request.
+            private int _waitTimeout;
+            public int WaitTimeout
+            {
+                get { return _waitTimeout; }
+                set { _waitTimeout = value; }
+            }
 
-                    var response = await client.SendAsync(request);
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var jsonData = await response.Content.ReadAsStringAsync();
-                        returnToken =  (string)JObject.Parse(jsonData)["value"];
-     
-                    }
-                    else
-                    {
-                        throw new Exception(String.Format("Unable to Login to Tick Historical Server\n {0}", response.ToString()));
-                    }
-                    return String.Format("Token{0}",returnToken);
-                }
-             }
-            public static async Task<bool> SendRAWExtractionRequest(string dssToken, string extractionRequestContent, string outputFileName, bool downloadFromAmzS3 = false, bool autoDecompress = false)
+            // Overall time the application wait the reqeust to be completed. 
+            //If it reached the timeout period and the status still be inprogress it stop requesting the data and mark as failed.
+            private int _requestTimeout;
+           
+            public int RequestTimeout
+            {
+                get { return _requestTimeout; }
+                set { _requestTimeout = value; }
+            }
+
+            private string _outputfilename;
+            public string OutputFIleName
+            {
+                get { return _outputfilename; }
+                set { _outputfilename = value; }
+            }
+            public async Task<bool> SendRAWExtractionRequest(string dssToken, string extractionRequestContent, string outputFileName, bool downloadFromAmzS3 = false, bool autoDecompress = false)
             {
                 var rawExtractionUri = new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/ExtractRaw");
                 var handler = new HttpClientHandler() { AllowAutoRedirect = false, PreAuthenticate = false };
@@ -81,7 +109,7 @@ namespace Authentication
                         Console.WriteLine("Request Failed Status Code:{0} Reason:{1}", extractionResponse.StatusCode, extractionResponse.ReasonPhrase);
                         return false;
                     }
-
+                    var overallRunTime = 0;
                     if (extractionResponse.StatusCode == System.Net.HttpStatusCode.Accepted)
                     {
                         System.Console.WriteLine("Request Accepted");
@@ -103,19 +131,27 @@ namespace Authentication
                                 Console.WriteLine("Request Status:{0}", statusValue.First());
                             }
                             if (resp.StatusCode != HttpStatusCode.OK)
-                                await Task.Delay(30000); // Wait for 30 sec and re-request the data accroding to TRTH Document.
+                            {
+                                await Task.Delay(WaitTimeout); // Wait for 30 sec and re-request the data accroding to TRTH Document.
+                                overallRunTime += WaitTimeout;
+                            }
                             else
                             {
                                 statusResponseContent = await resp.Content.ReadAsStringAsync();
                                 break;
                             }
-                        } while (true);
+                        } while (overallRunTime <= RequestTimeout);
                     }
                     else //200
                     {
                         statusResponseContent = await extractionResponse.Content.ReadAsStringAsync();
                     }
-
+                    if(overallRunTime > RequestTimeout)
+                    {
+                        // assume that it exit from the loop because Timeout mark this one as failed.
+                        Console.WriteLine("Request Failed! the reqeust take time to be completed and it reach Request Time out");
+                        return false;
+                    }
                     Console.WriteLine("Request completed");
                     // Deserialize response and get JobId and Notes from response message.
 
@@ -130,7 +166,7 @@ namespace Authentication
 
                     //*** Step 3 retrieve the data from Tick Historical Server using the JobID received from previous steps.
 
-                    //Construct data retrieval Uri using the JobId
+                    //Create new request Uri from the JobId
                     Uri retrieveDataUri = new Uri(String.Format("https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/RawExtractionResults('{0}')/$value", (string)JobId));
                     Console.WriteLine("Retreiving data from endpoint {0}", retrieveDataUri);
 
@@ -159,13 +195,13 @@ namespace Authentication
                     // Handle Redirect in case of application want to download data from amazon.
                     if (getDataResponse.StatusCode == HttpStatusCode.Redirect)
                     {
-                        Console.WriteLine("Get Redirect, retrieving data from Amazon S3 Uri:{0}\n", getDataResponse.Headers.Location);
+                        Console.WriteLine("Get URI Redirect, downloading data from Amazon S3 Uri:{0}\n", getDataResponse.Headers.Location);
                         var retrieveAmzRequest = new HttpRequestMessage(HttpMethod.Get, getDataResponse.Headers.Location);
                         retrieveAmzRequest.Headers.Add("Prefer", "respond-async");
                         retrieveAmzRequest.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("gzip"));
                         retrieveAmzRequest.Headers.AcceptEncoding.Add(new StringWithQualityHeaderValue("deflate"));
                         var amzResponse = await client.SendAsync(retrieveAmzRequest);
-                        Console.WriteLine("Amazon S3 Data retrival completed\nWriting data to {0}", outputFileName);
+                        Console.WriteLine("Amazon S3 Data retrieval completed\nWriting data to {0}", outputFileName);
                         await WriteResponseToFile(amzResponse,outputFileName);
               
                     }
@@ -179,7 +215,7 @@ namespace Authentication
 
                 return true;
                 }
-            public static async Task WriteResponseToFile(HttpResponseMessage responseMessage,string outputFileName)
+            protected async Task WriteResponseToFile(HttpResponseMessage responseMessage,string outputFileName)
             {
                 using (var fileStream = File.Create(outputFileName))
                 {
@@ -190,9 +226,10 @@ namespace Authentication
         }
         static void Main(string[] args)
         {
-            var dssToken="";
             try{
-                dssToken=TickHistoricalManager.GetToken("./Credential.json").GetAwaiter().GetResult();
+                TickHistoricalManager mgr = new TickHistoricalManager();
+                var dssToken = mgr.GetToken();
+
                 System.Console.WriteLine("Token={0}",dssToken);
                 var extractionRequestContent="";
                 var requestModelPath="./ExtractionRequest.json";
@@ -206,7 +243,7 @@ namespace Authentication
                     extractionRequestContent = reader.ReadToEndAsync().GetAwaiter().GetResult();
                 }
                 System.Console.WriteLine(extractionRequestContent);
-                if(TickHistoricalManager.SendRAWExtractionRequest(dssToken,extractionRequestContent,"output.csv.gz",true).GetAwaiter().GetResult())
+                if(mgr.SendRAWExtractionRequest(dssToken,extractionRequestContent,"output.csv.gz",true).GetAwaiter().GetResult())
                     System.Console.WriteLine("Request Completed Successful");
             }catch(Exception e)
             {
