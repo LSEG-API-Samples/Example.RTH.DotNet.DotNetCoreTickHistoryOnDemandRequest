@@ -253,27 +253,7 @@ This example just send Authentication request to TRTH Server and print Token to 
 }
 ```
 2) Open Command line and change directory to folder Authentication
-```
-C:\dotnetcore\TickHistoryOnDemandRequest>cd Authentication
-
-C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>dir
- Volume in drive C is Windows
- Volume Serial Number is 5217-07DB
-
- Directory of C:\dotnetcore\TickHistoryOnDemandRequest\Authentication
-
-10/18/2017  03:10 PM    <DIR>          .
-10/18/2017  03:10 PM    <DIR>          ..
-10/18/2017  02:32 PM               278 Authentication.csproj
-10/18/2017  02:22 PM    <DIR>          bin
-10/18/2017  03:42 PM               106 Credential.json
-10/18/2017  02:26 PM    <DIR>          obj
-10/18/2017  04:15 PM             2,241 Program.cs
-               3 File(s)          2,625 bytes
-               4 Dir(s)   7,452,020,736 bytes free
-
-C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>
-```
+3) 
 3) Run **dotnet** command with following options
 ```
 > dotnet restore
@@ -302,19 +282,11 @@ C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>
 It's the example to demonstrate how to use the REST API to retrieve Time and Sales Tick History. The example will read request query from Json file and then pass as a content of HttpRequestMessage class. We will apply instruction and steps from 
 [REST API Tutorial 4: On Demand tick data extraction](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=11220&type=learning_material_item) to create the messages. Anyway we will skip the steps to request field list from server and manually set required fields in Json file instead.
 
-This example will retrieve data and write it to file.csv.gz. You have to unpack .gz file and then open output in csv format. As the example read the query from Json file therefore it could be applied with End of Day Extraction request. User can just modify the request in default Json file and run the example.
+This example will retrieve data and write it to filename "output.csv.gz" by default. You have to unpack .gz file and then open output in csv format. As the example read the query from Json file therefore it could be applied with End of Day Extraction request. User can just modify the request in default Json file and run the example.
 
 #### Running the example
 
-1) Modify Credential.json in RawExtraction folder. Set DSS User name and DSS Password and save.
-```JSON
-{
-    "Credentials": {
-        "Username":  "<Your DSS Username>",
-        "Password":  "<Your DSS Password>"
-    }
-}
-```
+1) This example obtain a DSS user name and password from the application user. It will read username and password from console input so that you don't need to use Credential.json like Authentication example.
 2) Open Command line and change directory to RawExtraction
 
 3) This example read Json request content from file **ExtractionReqeust.json** so that you can modify ExtractionReqeust.json to request item and fields you want. The default value is for Time and Sales Tick Historical data.
@@ -357,7 +329,11 @@ Next step using **dotnet run** command to run the example
 ```
 Below is sample console output from the example.
 ```
-Token=Token_UwHzo7d_yfhd3TMfAJvaECUpWttHdh0pvVrWbJtwqkSANnmMAnhD4BPI3peti8CzPlDlGdjTSO12GWjaSez584qSEIhtJT4nhxwAaZx38S7BZUK-ASFgFGE5NXTV4cFT4nK4cu62-6w1fM1oZDfni0k-YQHLuDXjEK7ZrG-ES_DFjZoHfHBYK885cKdoo0-QWUFXO_TZ6AfHUrt96U9zvuQNKg2cufT4vlnnxnvWfbEHD17ojlmOo1TKnk_dqXVX3qapUuRtoRYJnbMcPKNELumKNjnGWP4RkJZLOCTg1aA
+Request new Token from DSS server
+Enter username:9009xxx
+Enter password:**************
+Token=Token_RqIpTpIstZNFgEh9Qcfg9PafRMLAGUDQ_nQq3zEKXE-Gue5xLNOZlL61RC8aVRiXuWgTP77p7xqUN-IuYNbouiS1Wg0FjgNF2Jfb4R3GyqIUR0i_sVyXmHvp57aXhahaTfiFwEokWbzkFA2qZGOO9Zdxe5GxnAEfXtpFDCXiwhCO1xELbM41Udu6Iswh_fVj
+cY77aD74UoVZ1ACBwdaKuJg7uSaVhvubi-H2QoDv91QM-UkNna_ix9XpOzfajdDHQY9JeeN8WwEEgbPJDM33pDnQ5NymUfq0NkJLJ_xy61TJmd4
 {
   "ExtractionRequest": {
     "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.TickHistoryTimeAndSalesExtractionRequest",
@@ -388,46 +364,52 @@ Token=Token_UwHzo7d_yfhd3TMfAJvaECUpWttHdh0pvVrWbJtwqkSANnmMAnhD4BPI3peti8CzPlDl
 Sending RawExtraction Request
 Waiting for response from server...
 Request Accepted
-Location: https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/ExtractRawResult(ExtractionId='0x0619201e3b9b3026')
+Location: https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/ExtractRawResult(ExtractionId='0x061b0e72db7b3016')
 Polling Request status
 Request Status:InProgress
-Request Status:InProgress
 Request completed
-Recevied JobID=0x0619201e3b9b3026
+Recevied JobID=0x061b0e72db7b3016
 Notes
 
 ========================================
-Extraction Services Version 11.3.38375 (21f5d0209263), Built Feb 12 2018 18:41:02
-User ID: 9009975
-Extraction ID: 2000000020035936
-Schedule: 0x0619201e3b9b3026 (ID = 0x0000000000000000)
-Input List (1 items):  (ID = 0x0619201e3b9b3026) Created: 13-03-2018 12:59:13 Last Modified: 13-03-2018 12:59:13
-Report Template (3 fields): _OnD_0x0619201e3b9b3026 (ID = 0x0619201e723b3026) Created: 13-03-2018 12:57:06 Last Modified: 13-03-2018 12:57:06
-Schedule dispatched via message queue (0x0619201e3b9b3026), Data source identifier (D30D547FE6A4408AB1CA2A7A3ED3BF67)
-Schedule Time: 13-03-2018 12:57:07
-Processing started at 13-03-2018 12:57:07
-Processing completed successfully at 13-03-2018 12:59:15
-Extraction finished at 13-03-2018 05:59:15 UTC, with servers: tm04n01, TRTH (76.22 secs)
+Extraction Services Version 11.3.38483 (495cc9d47079), Built Mar  8 2018 21:11:52
+User ID: 9009xxx
+Extraction ID: 2000000020664202
+Schedule: 0x061b0e72db7b3016 (ID = 0x0000000000000000)
+Input List (1 items):  (ID = 0x061b0e72db7b3016) Created: 19-03-2018 12:57:47 Last Modified: 19-03-2018 12:57:47
+Report Template (3 fields): _OnD_0x061b0e72db7b3016 (ID = 0x061b0e72f0eb3016) Created: 19-03-2018 12:56:09 Last Modified: 19-03-2018 12:56:09
+Schedule dispatched via message queue (0x061b0e72db7b3016), Data source identifier (3DCD7C8FDD0F41AEBD32D327631D7A3A)
+Schedule Time: 19-03-2018 12:56:10
+Processing started at 19-03-2018 12:56:10
+Processing completed successfully at 19-03-2018 12:57:48
+Extraction finished at 19-03-2018 05:57:48 UTC, with servers: tm07n03, TRTH (76.95 secs)
 Instrument <RIC,TRI.N> expanded to 1 RIC: TRI.N.
-Quota Message: INFO: Tick History Cash Quota Count Before Extraction: 5168; Instruments Approved for Extraction: 1; Tick History Cash Quota Count After Extraction: 5168, 1033.6% of Limit; Tick History Cash Quota Limit: 500
+Quota Message: INFO: Tick History Cash Quota Count Before Extraction: 5170; Instruments Approved for Extraction: 1; Tick History Cash Quota Count After Extraction: 5170, 1034% of Limit; Tick History C
+ash Quota Limit: 500
 Manifest: #RIC,Domain,Start,End,Status,Count
-Manifest: TRI.N,Market Price,2018-01-04T17:01:15.402881806Z,2018-01-04T21:01:47.604267631Z,Active,447
+Manifest: TRI.N,Market Price,2018-01-04T17:01:15.395372404Z,2018-01-04T21:01:47.596374307Z,Active,447
 
 ========================================
-Retreiving data from endpoint https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/RawExtractionResults('0x0619201e3b9b3026')/$value
+Retreiving data from endpoint https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/RawExtractionResults('0x061b0e72db7b3016')/$value
 Here is request message
- Method: GET, RequestUri: 'https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/RawExtractionResults('0x0619201e3b9b3026')/$value', Version: 1.1, Content: <null>, Headers:
+ Method: GET, RequestUri: 'https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/RawExtractionResults('0x061b0e72db7b3016')/$value', Version: 1.1, Content: <null>, Headers:
 {
-  Authorization: Token_UwHzo7d_yfhd3TMfAJvaECUpWttHdh0pvVrWbJtwqkSANnmMAnhD4BPI3peti8CzPlDlGdjTSO12GWjaSez584qSEIhtJT4nhxwAaZx38S7BZUK-ASFgFGE5NXTV4cFT4nK4cu62-6w1fM1oZDfni0k-YQHLuDXjEK7ZrG-ES_DFjZoHfHBYK885cKdoo0-QWUFXO_TZ6AfHUrt96U9zvuQNKg2cufT4vlnnxnvWfbEHD17ojlmOo1TKnk_dqXVX3qapUuRtoRYJnbMcPKNELumKNjnGWP4RkJZLOCTg1aA
+  Authorization: Token_RqIpTpIstZNFgEh9Qcfg9PafRMLAGUDQ_nQq3zEKXE-Gu5xLNOZlL61RC8aVRiXuWgTP77p7xqUN-IuYNbouiS1Wg0FjgNF2Jfb4R3GyqIUR0i_sVyXmHvp57aXhahaTfiFwEokWbzkFA2qZGOO9Z5GxnAEfXtpFDCXiwhCO1xELbM41U
+du6Iswh_fVjcY77aD74UoVZ1ACBwdaKuJg7uSaVhvubi-H2QoDv91QM-UkNna_ix9XpOzfajdDHQY9JeeN8WwEEgbPJDM33pDnQ5NymUfq0NkJLJ_xy61TJmd4
+  X-Direct-Download: True
   Prefer: respond-async
   Accept-Encoding: gzip
   Accept-Encoding: deflate
 }
-Data retrieval completed
+Get URI Redirect, downloading data from Amazon S3 Uri:https://s3.amazonaws.com/tickhistory.query.production.hdc-results/3DCD7C8FDD0F41AEBD32D327631D7A3A/data/merged/merged.csv.gz?AWSAccessKeyId=AKIAJVAI4XO
+RJURKYMEA&Expires=1521460670&response-content-disposition=attachment%3B filename%3D_OnD_0x061b0e72db7b3016.csv.gz&Signature=vxmN%2BiqQxmhAPE5hEcOE6r545Qk%3D&x-amz-request-payer=requester
+
+Amazon S3 Data retrieval completed
 Writing data to output.csv.gz
-Write data to output.csv.gz completed 
+Write data to output.csv.gz completed
 Request Completed Successful
 
+C:\2018\inprogress\Example.TRTH.DotNETCore.TickHistoryOnDemandRequest\RawExtraction>
 
 ```
 Unpack output.csv.gz and open output.csv you should see the output like this.
