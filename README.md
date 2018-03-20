@@ -2,11 +2,13 @@
 
 ## About the example
 
-This example is C# console based application and it was created for demonstrates how to use Microsoft .NET Core SDK version 2.0 with TRTH (Thomson Reuters Tick History) REST API. The example also use the REST API with direct HTTPs . It can use to retrieve Historical tick data(Time and sales data) and End of day data, with an On Demand extraction request. 
+This example is C# console based application and it was created to demonstrates how to use Microsoft .NET Core SDK version 2.0 with TRTH (Thomson Reuters Tick History) REST API. The example also use the REST API with direct HTTPs . It can use to retrieve Historical tick data(Time and sales data) and End of day data, with an On Demand extraction request. 
 
 ## About the REST API
 
-Tick History's REST API is a Representational State Transfer (REST)-compliant API that programmatically exposes Tick History functionality on the DataScope Select platform. Client applications can be written in most programming languages, such as C#, C++, Visual Basic, Java, Python, Objective-C, and Swift. Basically the REST API can be used with a [REST API toolkit](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) or by communicating directly with the server using HTTPS. However using REST API toolkit has some limitation when user want to deploy .NET application on cross platform environment as the toolkit was created with .NET Framework 4.x which support windows platform only. Cloud environment such as AWS Lambda supports only function code in C# using the .NET Core SDK 2.x. As a result it causes the application which built with REST API toolkit unable to works on Linux or macOS and also the AWS. More information about limitation of the Toolkit will be provided next topic. However to deploy .NET application on other platform, developer can implement the application with .NET Core SDK. And they have to use .NET Core functionality to communicate directly over HTTPS. It just like working with other programming languages such as Java and Python. 
+Tick History's REST API is a Representational State Transfer (REST)-compliant API that programmatically exposes Tick History functionality on the DataScope Select platform. Client applications can be written in most programming languages, such as C#, C++, Visual Basic, Java, Python and Swift. 
+
+There are two options for .NET developer to use the REST API. The first option is to use [REST API toolkit](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) and the second one is to communicating directly with the server using HTTPS. At the time we are writing this article, using the REST API toolkit has some limitation when user want to deploy .NET application on other platform such as macOS, Linux and AWS lambda cloud environment. This is because the toolkit was created with .NET Framework 4.x which support Windows platform only. Cloud environment such as AWS Lambda supports only function code in C# using the .NET Core SDK 2.x. As a result they are unable to run .NET application which built with the REST API toolkit on other platforms. More information about a limitation of the Toolkit will be provided in next topic. There are an option for .NET developer to develop an application on cross platform environment, they can develop the application with .NET Core SDK. Developers can use .NET Core functionality to communicate directly over HTTPS and it just like working with other programming languages such as Java or Python.
 
 
 ### Limitation of REST API Toolkit
@@ -17,13 +19,11 @@ This section describing the issue when using the REST API Toolkit on macOS or Li
 
 * It's unable to run on macOS and Linux as it requires some of dependency libraries that available on Windows only.
 
-* It’s not an Open Source library therefore we are unable to modify the codes or change anything in the Toolkit.
-
+* It’s not an Open Source SDK therefore we are unable to modify the codes or change anything in oder to upgrade the dependency libraries used by the Toolkit.
 
 ![REST API Toolkit Limitation](./DSSTRTHArchitecture_Mac.png)
 
-
-Typically you can create a new project target .NET Core 2.x on Visual Studio 2017 and then add libraries from the REST API Toolkit to the project. You should be able to build the solution or project without any error and you should be able to run it on Windows platform.The following sample codes demonstrates Extraction request and it works very well on Windows with .NET Core 2.0 Project type.
+Typically you can create a new project target .NET Core 2.x on Visual Studio 2017 and then add libraries from the REST API Toolkit to the project. You should be able to build the solution or project without any error and you should be able to run it on Windows platform. The following sample codes demonstrates Extraction request and it works very well on Windows with .NET Core 2.0 Project type.
 
 ```cs
 var ExtractionsContext = new ExtractionsContext(new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/"), "<UserName>", "Password");
@@ -95,15 +95,15 @@ Program.cs(3,7): error CS0246: The type or namespace name 'ThomsonReuters' could
 
 Build FAILED.
 ```
-At the time we write this article, it looks like the version of OData Client used by the REST API toolkit is not compatible with OData Client supported by .NET Core 2.x. And it seems be the main problem prevents us from using the API Toolkit on macOS or Linux. 
+At the time we write this article, it looks like the version of OData Client with related components used by the REST API toolkit is not compatible with OData Client supported by .NET Core 2.x. And it seems be the main problem prevents us from using the API Toolkit on macOS or Linux. The reason that it works on Windows because you have .NET Framework installed on the Windows therefore the application can load underlying libraries used by .NET Framework 4.x. If you copy the same project to a new installed Windows and it has only .NET Core 2.0 installed, you should see the same error message generated by **dotnet** command.
 
 ## .NET Core Solution
 
-As explained earlier .NET developer may choose alternative approach by communicate directly over HTTPS like the other programming languages. So they can control everything including the way to send Http request and process the Http response. However developer has to understand what are the request messages they need to send and what are the Http Headers required by the server. There are [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item) and the [REST API Reference](https://hosted.datascopeapi.reuters.com/RestApi.Help/Home/ExampleAppDownload?Id=1) that we provide for developer so that they can find more details about the API specification and the information about HTTP request and response along with the request condition and its parameters.
+As explained earlier .NET developer may choose alternative approach by communicate directly over HTTPS like the other programming languages. So they can control everything including the way to send Http request and process the Http response. However developer has to understand what are the request messages they need to send and what are the Http Headers required by the server. There are [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item) and the [REST API Reference](https://hosted.datascopeapi.reuters.com/RestApi.Help/Home/ExampleAppDownload?Id=1) that provide more information about the API specification and the information about HTTP request and response along with the request condition and its parameters.
 
 ![REST API Toolkit Solution](./DSSTRTHArchitecture_Mac_Solution.png)
 
-.NET Core 2.x SDK providing HTTPClient class which developer can use to send Http request and process the response message.It has a new version of NewtonSoft JSON.NET library which support .NET Core target platform and fully compatible with .NET Core 2.x so that .NET developer can use the Json library to parse the Json data. 
+.NET Core 2.x SDK providing HTTPClient class which can used to send Http request and process the response message and it has a new version of [NewtonSoft JSON.NET](https://www.newtonsoft.com/json) which support .NET Core target platform and fully compatible with .NET Core 2.x. Developer can use both library or class together to process the message and get the Json data.
 
 ### Technical Requirements
 
@@ -114,13 +114,13 @@ Based on the solution described above, this example requires the following SDK a
 
 * C# is the programming language used in example application. 
 
-* Using [Json.Net](https://www.newtonsoft.com/json) to parse data from the Http response message. 
+* Using [NewtonSoft Json.Net](https://www.newtonsoft.com/json) to parse data from the Http response message.
 
 You can use Visual Studio 2017 or using just Visual Studio code to open the example codes. We will take about sample usage in the next topic.
 
 ### How to use HttpClient
 
-It starts from explicitly create HttpClientHandler and then pass it to HttpClient. Next step application has to construct HttpRequestMessage and select HttpMethod Post or Get and then set Http header according to [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item). To send Http Post message application just need to convert Json request message from the user guide to StringContent type and set it to Content of the HttpRequestMessage.
+It starts from explicitly create HttpClientHandler and then pass it to HttpClient. Next step application has to create HttpRequestMessage and select HttpMethod Post or Get and then set Http header according to [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item). To send Http Post message application just need to convert Json request message according to the user guide to StringContent type and set it to Content of the HttpRequestMessage.
 
 The following sample codes demonstrate how to use HttpClient class to send Http request(Post/Get) and process Http response message using Json.NET.
 
@@ -185,7 +185,7 @@ t: #RIC,Domain,Start,End,Status,Count\nManifest: .AD.N,Market Price,,,Inactive,0
 }
 ```
 
-C# codes
+Sample code used to parse the Json data.
 ```cs
 //Convert response content to Json String as we know it return Content in Json format.
 responseContent = await extractionResponse.Content.ReadAsStringAsync();
@@ -233,7 +233,7 @@ if (getDataResponse.StatusCode == HttpStatusCode.Redirect)
 }
 ```
 
-## Demo 
+## Demo
 
 There are two console applications provided in this example. 
 
@@ -279,7 +279,7 @@ C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>
 
 ### 2.RawExtraction example
 
-It's the example to demonstrate how to use the REST API to retrieve Time and Sales Tick History. The example will read request query from Json file and then pass as a content of HttpRequestMessage class. We will apply instruction and steps from 
+It's the example to demonstrate how to use the REST API to retrieve Time and Sales Tick History. The example will read request query from Json file and then set it as a Content of HttpRequestMessage class. We will apply instruction and steps from 
 [REST API Tutorial 4: On Demand tick data extraction](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=11220&type=learning_material_item) to create the messages. Anyway we will skip the steps to request field list from server and manually set required fields in Json file instead.
 
 This example will retrieve data and write it to filename "output.csv.gz" by default. You have to unpack .gz file and then open output in csv format. As the example read the query from Json file therefore it could be applied with End of Day Extraction request. User can just modify the request in default Json file and run the example.
@@ -288,7 +288,6 @@ This example will retrieve data and write it to filename "output.csv.gz" by defa
 
 1) This example obtain a DSS user name and password from the application user. It will read username and password from console input so that you don't need to use Credential.json like Authentication example.
 2) Open Command line and change directory to RawExtraction
-
 3) This example read Json request content from file **ExtractionReqeust.json** so that you can modify ExtractionReqeust.json to request item and fields you want. The default value is for Time and Sales Tick Historical data.
 
 4) Run command **dotnet restore** to restore required libraries and then build the example.
@@ -368,7 +367,7 @@ Location: https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/Extract
 Polling Request status
 Request Status:InProgress
 Request completed
-Recevied JobID=0x061b0e72db7b3016
+Received JobID=0x061b0e72db7b3016
 Notes
 
 ========================================
@@ -439,3 +438,9 @@ TRI.N,Market Price,2018-01-04T21:01:47.604267631Z,-5,Trade,44.03,,21:01:47.57800
 The RawExtraction example also provide file EODDataExtraction.json in the same project folder. It is sample request for End of Day data. You can just replace ExtractionRequest.json with information from EODDataExtraction.json.
 
 You can download examples from [GitHub](https://github.com/TR-API-Samples/Example.TRTH.DotNETCore.TickHistoryOnDemandRequest).
+
+## References
+* [Thomson Reuters Tick History (TRTH) - REST API Documents](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs)
+* [NewtonSoft Json.NET](https://www.newtonsoft.com/json)
+* [.NET Core SDK](https://www.microsoft.com/net/download/windows)
+* [.NET Core Guide](https://docs.microsoft.com/en-us/dotnet/core/)
