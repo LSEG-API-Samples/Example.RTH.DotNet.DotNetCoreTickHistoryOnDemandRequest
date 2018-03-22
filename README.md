@@ -2,13 +2,13 @@
 
 ## About the example
 
-This example is C# console based application and it was created to demonstrates how to use Microsoft .NET Core SDK version 2.0 with TRTH (Thomson Reuters Tick History) REST API. The example also use the REST API with direct HTTPs . It can use to retrieve Historical tick data(Time and sales data) and End of day data, with an On Demand extraction request. 
+This example is C# console based application and it was created to demonstrates how to use Microsoft .NET Core SDK version 2.0 with TRTH (Thomson Reuters Tick History) REST API. The example also use the REST API with direct HTTPs . It can use to retrieve Historical Tick data (Time and Sales data) and End of day data, with an On Demand extraction request. 
 
 ## About the REST API
 
 Tick History's REST API is a Representational State Transfer (REST)-compliant API that programmatically exposes Tick History functionality on the DataScope Select platform. Client applications can be written in most programming languages, such as C#, C++, Visual Basic, Java, Python and Swift. 
 
-There are two options for .NET developer to use the REST API. The first option is to use [REST API toolkit](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) and the second one is to communicating directly with the server using HTTPS. At the time we are writing this article, using the REST API toolkit has some limitation when user want to deploy .NET application on other platform such as macOS, Linux and AWS lambda cloud environment. This is because the toolkit was created with .NET Framework 4.x which support Windows platform only. Cloud environment such as AWS Lambda supports only function code in C# using the .NET Core SDK 2.x. As a result they are unable to run .NET application which built with the REST API toolkit on other platforms. More information about a limitation of the Toolkit will be provided in next topic. There are an option for .NET developer to develop an application on cross platform environment, they can develop the application with .NET Core SDK. Developers can use .NET Core functionality to communicate directly over HTTPS and it just like working with other programming languages such as Java or Python.
+There are two options for .NET developer to use the REST API. The first option is to use [REST API toolkit](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) and the second one is to communicating directly with the server using HTTPS. At the time we are writing this article, using the REST API toolkit has some limitation when user want to deploy .NET application on other platforms such as macOS, Linux and AWS Lambda Cloud environment. This is because the toolkit was created with .NET Framework 4.x which support Windows platform only. Cloud environment such as AWS Lambda supports only function code in C# using the .NET Core SDK 2.x. As a result they are unable to run .NET application which built with the REST API toolkit on other platforms. More information about a limitation of the Toolkit will be provided in next topic. There are an option for .NET developer to develop an application on cross platform environment, they can develop the application with .NET Core SDK. Developers can use .NET Core functionality to communicate directly over HTTPS and it just like working with other programming languages such as Java or Python.
 
 
 ### Limitation of REST API Toolkit
@@ -120,7 +120,7 @@ You can use Visual Studio 2017 or using just Visual Studio code to open the exam
 
 ### How to use HttpClient
 
-It starts from explicitly create HttpClientHandler and then pass it to HttpClient. Next step application has to create HttpRequestMessage and select HttpMethod Post or Get and then set Http header according to [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item). To send Http Post message application just need to convert Json request message according to the user guide to StringContent type and set it to Content of the HttpRequestMessage.
+It starts from explicitly create HttpClientHandler and then pass it to HttpClient. Next step application has to create HttpRequestMessage and select HttpMethod Post or Get and then set Http header according to [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item). To send Http Post message, the application just need to convert Json request message according to the user guide to StringContent type and set it to Content of the HttpRequestMessage.
 
 The following sample codes demonstrate how to use HttpClient class to send Http request(Post/Get) and process Http response message using Json.NET.
 
@@ -238,7 +238,7 @@ if (getDataResponse.StatusCode == HttpStatusCode.Redirect)
 There are two console applications provide in the solution. 
 
 ### 1. Authentication example
-It's example to demonstrate how to get Authentication Token from TickHistorical Server. We follow instruction from [Tutorial 1](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) to create the request message.
+It's an example to demonstrate how to get Authentication Token from TickHistorical Server. We follow instruction from [Tutorial 1](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) to create the request message.
 
 This example just send Authentication request to TRTH Server and print Token to console output.
 
@@ -253,7 +253,6 @@ This example just send Authentication request to TRTH Server and print Token to 
 }
 ```
 2) Open Command line and change directory to folder Authentication
-3) 
 3) Run **dotnet** command with following options
 ```
 > dotnet restore
@@ -286,9 +285,9 @@ This example will retrieve data and write it to filename "output.csv.gz" by defa
 
 #### Running the example
 
-1) This example obtain a DSS user name and password from the application user. It will read username and password from console input so that you don't need to use Credential.json like Authentication example.
+1) This example obtains a DSS username and password from the application user. It will read username and password from console input so that you don't need to use Credential.json like Authentication example.
 2) Open Command line and change directory to RawExtraction
-3) This example read Json request content from file **ExtractionReqeust.json** so that you can modify ExtractionReqeust.json to request item and fields you want. The default value is for Time and Sales Tick Historical data.
+3) This example reads Json request content from **ExtractionReqeust.json** file, so that you can modify ExtractionReqeust.json to request item and fields you want. The default value is for Time and Sales Tick Historical data.
 
 4) Run command **dotnet restore** to restore required libraries and then build the example.
 
