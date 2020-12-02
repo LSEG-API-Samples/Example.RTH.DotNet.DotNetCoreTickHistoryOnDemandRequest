@@ -1,21 +1,20 @@
-# Using Microsoft .NET Core with Tick History REST API
+# Using Microsoft .NET Core with Refinitiv Tick History REST API
 
 ## About the example
 
-This example is C# console based application and it was created to demonstrates how to use Microsoft .NET Core SDK version 2.0 with TRTH (Thomson Reuters Tick History) REST API. The example also use the REST API with direct HTTPs . It can use to retrieve Historical Tick data (Time and Sales data) and End of day data, with an On Demand extraction request. 
+This example is C# console based application and it was created to demonstrates how to use Microsoft .NET Core SDK version 2.0 wit RTH (Refinitiv Tick History) REST API. The example also use the REST API with direct HTTPs . It can use to retrieve Historical Tick data (Time and Sales data) and End of day data, with an On Demand extraction request.
 
 ## About the REST API
 
-Tick History's REST API is a Representational State Transfer (REST)-compliant API that programmatically exposes Tick History functionality on the DataScope Select platform. Client applications can be written in most programming languages, such as C#, C++, Visual Basic, Java, Python and Swift. 
+Tick History's REST API is a Representational State Transfer (REST)-compliant API that programmatically exposes Tick History functionality on the DataScope Select platform. Client applications can be written in most programming languages, such as C#, C++, Visual Basic, Java, Python and Swift.
 
-There are two options for .NET developer to use the REST API. The first option is to use [REST API toolkit](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) and the second one is to communicating directly with the server using HTTPS. At the time we are writing this article, using the REST API toolkit has some limitation when user want to deploy .NET application on other platforms such as macOS, Linux and AWS Lambda Cloud environment. This is because the toolkit was created with .NET Framework 4.x which support Windows platform only. Cloud environment such as AWS Lambda supports only function code in C# using the .NET Core SDK 2.x. As a result they are unable to run .NET application which built with the REST API toolkit on other platforms. More information about a limitation of the Toolkit will be provided in next topic. There are an option for .NET developer to develop an application on cross platform environment, they can develop the application with .NET Core SDK. Developers can use .NET Core functionality to communicate directly over HTTPS and it just like working with other programming languages such as Java or Python.
-
+There are two options for .NET developer to use the REST API. The first option is to use [REST API toolkit](https://developers.refinitiv.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/download) and the second one is to communicating directly with the server using HTTPS. At the time we are writing this article, using the REST API toolkit has some limitation when user want to deploy .NET application on other platforms such as macOS, Linux and AWS Lambda Cloud environment. This is because the toolkit was created with .NET Framework 4.x which support Windows platform only. Cloud environment such as AWS Lambda supports only function code in C# using the .NET Core SDK 2.x. As a result they are unable to run .NET application which built with the REST API toolkit on other platforms. More information about a limitation of the Toolkit will be provided in next topic. There are an option for .NET developer to develop an application on cross platform environment, they can develop the application with .NET Core SDK. Developers can use .NET Core functionality to communicate directly over HTTPS and it just like working with other programming languages such as Java or Python.
 
 ### Limitation of REST API Toolkit
 
 This section describing the issue when using the REST API Toolkit on macOS or Linux. At the time we write this article, we understand that the Toolkit has the following limitation.
 
-* It supports only Windows Platform because the Toolkit still building with .NET Framework 4.x. 
+* It supports only Windows Platform because the Toolkit still building with .NET Framework 4.x.
 
 * It's unable to run on macOS and Linux as it requires some of dependency libraries that available on Windows only.
 
@@ -95,11 +94,12 @@ Program.cs(3,7): error CS0246: The type or namespace name 'ThomsonReuters' could
 
 Build FAILED.
 ```
+
 At the time we write this article, it looks like the version of OData Client with related components used by the REST API toolkit is not compatible with OData Client supported by .NET Core 2.x. And it seems be the main problem prevents us from using the API Toolkit on macOS or Linux. The reason that it works on Windows because you have .NET Framework installed on the Windows therefore the application can load underlying libraries provided by .NET Framework 4.x. If you copy the same project to a new installed Windows and it has only .NET Core 2.0 installed, you should see the same error message generated by **dotnet** command.
 
 ## .NET Core Solution
 
-As explained earlier .NET developer may choose alternative approach by communicate directly over HTTPS like the other programming languages. So they can control everything including the way to send Http request and process the Http response. However developer has to understand what are the request messages they need to send and what are the Http Headers required by the server. There are [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item) and the [REST API Reference](https://hosted.datascopeapi.reuters.com/RestApi.Help/Home/ExampleAppDownload?Id=1) that provide more information about the API specification and the information about HTTP request and response along with the request condition and its parameters.
+As explained earlier .NET developer may choose alternative approach by communicate directly over HTTPS like the other programming languages. So they can control everything including the way to send Http request and process the Http response. However developer has to understand what are the request messages they need to send and what are the Http Headers required by the server. There are [REST API User Guide](https://developers.refinitiv.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/documentation) and the [REST API Reference](https://hosted.datascopeapi.reuters.com/RestApi.Help/Home/ExampleAppDownload?Id=1) that provide more information about the API specification and the information about HTTP request and response along with the request condition and its parameters.
 
 ![REST API Toolkit Solution](./DSSTRTHArchitecture_Mac_Solution.png)
 
@@ -112,7 +112,7 @@ Based on the solution described above, this example requires the following SDK a
 * Visual Studio 2017 or Visual Studio Code.
 * .NET Core 2.0 SDK. You can find installation instruction including the document about .NET Core from [Microsoft website](https://www.microsoft.com/net/core/platform). This example use [HttpClient](https://docs.microsoft.com/en-us/dotnet/csharp/tutorials/console-webapiclient) class to send request and get response from DSS Server.
 
-* C# is the programming language used in example application. 
+* C# is the programming language used in example application.
 
 * Using [NewtonSoft Json.Net](https://www.newtonsoft.com/json) to parse data from the Http response message.
 
@@ -120,11 +120,11 @@ You can use Visual Studio 2017 or using just Visual Studio code to open the exam
 
 ### How to use HttpClient
 
-It starts from explicitly create HttpClientHandler and then pass it to HttpClient. Next step application has to create HttpRequestMessage and select HttpMethod Post or Get and then set Http header according to [REST API User Guide](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs?content=11928&type=documentation_item). To send Http Post message, the application just need to convert Json request message according to the user guide to StringContent type and set it to Content of the HttpRequestMessage.
+It starts from explicitly create HttpClientHandler and then pass it to HttpClient. Next step application has to create HttpRequestMessage and select HttpMethod Post or Get and then set Http header according to [REST API User Guide](https://developers.refinitiv.com/content/dam/devportal/api-families/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/documentation/tick_hist_rest_api-guide_november2019.pdf). To send Http Post message, the application just need to convert Json request message according to the user guide to StringContent type and set it to Content of the HttpRequestMessage.
 
 The following sample codes demonstrate how to use HttpClient class to send Http request(Post/Get) and process Http response message using Json.NET.
 
-**Send Http Post** 
+**Send Http Post**
 
 ```cs
   var rawExtractionUri = new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/ExtractRaw");
@@ -151,6 +151,7 @@ The following sample codes demonstrate how to use HttpClient class to send Http 
     ...
   }
 ```
+
 **Send Http Get**
 
 ```cs
@@ -186,6 +187,7 @@ t: #RIC,Domain,Start,End,Status,Count\nManifest: .AD.N,Market Price,,,Inactive,0
 ```
 
 **Sample code to parse the Json data**
+
 ```cs
 //Convert response content to Json String as we know it return Content in Json format.
 responseContent = await extractionResponse.Content.ReadAsStringAsync();
@@ -196,6 +198,7 @@ var notes = JObject.Parse(statusResponseContent)["Notes"];
 foreach (var note in notes)
      Console.WriteLine(note);
 ```
+
 To download result from server it has an option to allow user downloading data from Amazon S3 instead. Application  has to add **X-Direct-Download** custom header in Http request message and set it to **True**  in order to get HTTP Redirect to a new download location on Amazon S3. Below is sample codes from the example.
 
 ```cs
@@ -229,21 +232,24 @@ if (getDataResponse.StatusCode == HttpStatusCode.Redirect)
     var amzResponse = await client.SendAsync(retrieveAmzRequest);
     Console.WriteLine("Amazon S3 Data retrival completed\nWriting data to {0}", outputFileName);
     await WriteResponseToFile(amzResponse,outputFileName);
-              
+
 }
 ```
 
 ## Demo
 
-There are two console applications provide in the solution. 
+There are two console applications provide in the solution.
 
 ### 1. Authentication example
+
 It's an example to demonstrate how to get Authentication Token from TickHistorical Server. We follow instruction from [Tutorial 1](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=8713&type=learning_material_item) to create the request message.
 
 This example just send Authentication request to TRTH Server and print Token to console output.
 
 #### Running the example
+
 1) Modify Credential.json in Authentication folder. Set DSS User name and DSS Password and save.
+
 ```JSON
 {
     "Credentials": {
@@ -252,8 +258,10 @@ This example just send Authentication request to TRTH Server and print Token to 
     }
 }
 ```
+
 2) Open Command line and change directory to folder Authentication
 3) Run **dotnet** command with following options
+
 ```
 > dotnet restore
 > dotnet build
@@ -278,8 +286,8 @@ C:\dotnetcore\TickHistoryOnDemandRequest\Authentication>
 
 ### 2.RawExtraction example
 
-It's the example to demonstrate how to use the REST API to retrieve Time and Sales Tick History. The example will read request query from Json file and then set it as a Content of HttpRequestMessage class. We will apply instruction and steps from 
-[REST API Tutorial 4: On Demand tick data extraction](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/learning?content=11220&type=learning_material_item) to create the messages. Anyway we will skip the steps to request field list from server and manually set required fields in Json file instead.
+It's the example to demonstrate how to use the REST API to retrieve Time and Sales Tick History. The example will read request query from Json file and then set it as a Content of HttpRequestMessage class. We will apply instruction and steps from
+[REST API Tutorial 4: On Demand tick data extraction](https://developers.refinitiv.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api/tutorials) to create the messages. Anyway we will skip the steps to request field list from server and manually set required fields in Json file instead.
 
 This example will retrieve data and write it to filename "output.csv.gz" by default. You have to unpack .gz file and then open output in csv format. As the example read the query from Json file therefore it could be applied with End of Day Extraction request. User can just modify the request in default Json file and run the example.
 
@@ -321,11 +329,15 @@ Time Elapsed 00:00:03.58
 C:\dotnetcore\TickHistoryOnDemandRequest_001\RawExtraction>
 
 ```
+
 Next step using **dotnet run** command to run the example
+
 ```
 > dotnet run 
 ```
+
 Below is sample console output from the example.
+
 ```
 Request new Token from DSS server
 Enter username:9009xxx
@@ -410,7 +422,9 @@ Request Completed Successful
 C:\2018\inprogress\Example.TRTH.DotNETCore.TickHistoryOnDemandRequest\RawExtraction>
 
 ```
+
 Unpack output.csv.gz and open output.csv you should see the output like this.
+
 ```
 #RIC,Domain,Date-Time,GMT Offset,Type,Price,Volume,Exch Time
 TRI.N,Market Price,2018-01-04T17:01:15.402881806Z,-5,Trade,43.97,400,17:01:15.378000000
@@ -434,12 +448,14 @@ TRI.N,Market Price,2018-01-04T21:01:47.603737654Z,-5,Trade,44.03,26850,21:01:47.
 TRI.N,Market Price,2018-01-04T21:01:47.604267631Z,-5,Trade,44.03,,21:01:47.578000000
 
 ```
+
 The RawExtraction example also provide file EODDataExtraction.json in the same project folder. It is sample request for End of Day data. You can just replace ExtractionRequest.json with information from EODDataExtraction.json.
 
 You can download examples from [GitHub](https://github.com/TR-API-Samples/Example.TRTH.DotNETCore.TickHistoryOnDemandRequest).
 
 ## References
-* [Thomson Reuters Tick History (TRTH) - REST API Documents](https://developers.thomsonreuters.com/thomson-reuters-tick-history-trth/thomson-reuters-tick-history-trth-rest-api/docs)
+
+* [Refinitiv Tick History (RTH) - REST API Documents](https://developers.refinitiv.com/en/api-catalog/refinitiv-tick-history/refinitiv-tick-history-rth-rest-api)
 * [NewtonSoft Json.NET](https://www.newtonsoft.com/json)
 * [.NET Core SDK](https://www.microsoft.com/net/download/windows)
 * [.NET Core Guide](https://docs.microsoft.com/en-us/dotnet/core/)
