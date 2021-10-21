@@ -22,7 +22,7 @@ namespace Authentication
         public static async Task<string> GetToken(string credentialFilePath)
         {
             var returnToken="";
-            var authenUri=new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Authentication/RequestToken");
+            var authenUri=new Uri("https://selectapi.datascope.refinitiv.com/RestApi/v1/Authentication/RequestToken");
             var content="";
             if(!File.Exists(credentialFilePath))
             {
