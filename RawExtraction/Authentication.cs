@@ -95,7 +95,7 @@ namespace Example.DotNetCore.TRTHRESTAPI.Security
         public Authentication()
         {
             _credential = new Credentials();
-            _authenUri = new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Authentication/RequestToken");
+            _authenUri = new Uri("https://selectapi.datascope.refinitiv.com/RestApi/v1/Authentication/RequestToken");
         }
         private Credentials _credential;
         private Uri _authenUri;
@@ -142,7 +142,7 @@ namespace Example.DotNetCore.TRTHRESTAPI.Security
         {
             using (HttpClient client=new HttpClient())
             {
-                var validateUri = new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Authentication/ValidateToken" + string.Format("(Token='{0}')",token));
+                var validateUri = new Uri("https://selectapi.datascope.refinitiv.com/RestApi/v1/Authentication/ValidateToken" + string.Format("(Token='{0}')",token));
 
                 var resp=await client.GetAsync(validateUri);
                 Console.WriteLine("Get Validate Token Result");
