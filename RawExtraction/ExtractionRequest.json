@@ -1,13 +1,13 @@
 {
   "ExtractionRequest": {
-    "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.TickHistoryTimeAndSalesExtractionRequest",
+    "@odata.type": "#DataScope.Select.Api.Extractions.ExtractionRequests.TickHistoryTimeAndSalesExtractionRequest",
     "ContentFieldNames": [
       "Trade - Price",
       "Trade - Volume",
       "Trade - Exchange Time"
     ],
     "IdentifierList": {
-      "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
+      "@odata.type": "#DataScope.Select.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
       "InstrumentIdentifiers": [
         {
           "Identifier": "TRI.N",
