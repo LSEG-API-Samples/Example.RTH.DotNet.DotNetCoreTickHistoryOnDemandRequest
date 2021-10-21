@@ -1,6 +1,6 @@
 {
   "ExtractionRequest": {
-    "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.ElektronTimeseriesExtractionRequest",
+    "@odata.type": "#DataScope.Select.Api.Extractions.ExtractionRequests.ElektronTimeseriesExtractionRequest",
     "ContentFieldNames": [
       "Instrument ID",
       "Open",
@@ -13,7 +13,7 @@
       "Trade Date"
     ],
     "IdentifierList": {
-      "@odata.type": "#ThomsonReuters.Dss.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
+      "@odata.type": "#DataScope.Select.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
       "InstrumentIdentifiers": [
         {
           "Identifier": "TRI.N",
