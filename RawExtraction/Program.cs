@@ -81,7 +81,7 @@ namespace Example.DotNetCore.TRTHRESTAPI
             }
             public async Task<bool> SendRAWExtractionRequest(string dssToken, string extractionRequestContent, string outputFileName, bool downloadFromAmzS3 = false, bool autoDecompress = false)
             {
-                var rawExtractionUri = new Uri("https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/ExtractRaw");
+                var rawExtractionUri = new Uri("https://selectapi.datascope.refinitiv.com/RestApi/v1/Extractions/ExtractRaw");
                 var handler = new HttpClientHandler() { AllowAutoRedirect = false, PreAuthenticate = false };
                 if (autoDecompress)
                     handler.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
@@ -167,7 +167,7 @@ namespace Example.DotNetCore.TRTHRESTAPI
                     //*** Step 3 retrieve the data from Tick Historical Server using the JobID received from previous steps.
 
                     //Create new request Uri from the JobId
-                    Uri retrieveDataUri = new Uri(String.Format("https://hosted.datascopeapi.reuters.com/RestApi/v1/Extractions/RawExtractionResults('{0}')/$value", (string)JobId));
+                    Uri retrieveDataUri = new Uri(String.Format("https://selectapi.datascope.refinitiv.com/RestApi/v1/Extractions/RawExtractionResults('{0}')/$value", (string)JobId));
                     Console.WriteLine("Retreiving data from endpoint {0}", retrieveDataUri);
 
                     // Create a new request and set HttpMethod to Get and set AcceptEncoding to gzip and defalte
