@@ -16,15 +16,15 @@
       "@odata.type": "#DataScope.Select.Api.Extractions.ExtractionRequests.InstrumentIdentifierList",
       "InstrumentIdentifiers": [
         {
-          "Identifier": "TRI.N",
+          "Identifier": "IBM.N",
           "IdentifierType": "Ric"
         }
       ]
     },
     "Condition": {
       "ReportDateRangeType": "Range",
-      "QueryStartDate": "1996-01-01",
-      "QueryEndDate": "2017-11-01"
+      "QueryStartDate": "2000-01-01",
+      "QueryEndDate": "2024-11-01"
     }
   }
 }
